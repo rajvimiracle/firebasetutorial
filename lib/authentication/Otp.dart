@@ -94,22 +94,6 @@ class OTPScreen extends StatefulWidget {
 
 class _OTPScreenState extends State<OTPScreen> {
 
-  SignIn()async{
-    PhoneAuthCredential credential = PhoneAuthProvider.credential(
-        verificationId: widget.verificationid,
-        smsCode: otpController.text.toString());
-
-    try{
-      await FirebaseAuth.instance.signInWithCredential(credential).then((value) {
-        Get.offAll(Wrapper());
-      });
-    } on FirebaseAuthException catch(e){
-      Get.snackbar('Error Occured', e.code);
-    }catch (e){
-      Get.snackbar('Error Occured', e.toString());
-    }
-
-  }
 
   TextEditingController otpController = TextEditingController();
 
@@ -140,10 +124,28 @@ class _OTPScreenState extends State<OTPScreen> {
             height: 30,
           ),
           ElevatedButton(
-            onPressed: () {
+
+               onPressed: () async{
+            try{
+              PhoneAuthCredential credential = await PhoneAuthProvider.credential(
+                  verificationId: widget.verificationid,
+                  smsCode: otpController.text.toString());
+              FirebaseAuth.instance.signInWithCredential(credential).then((value) {
+                // Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(),));
+              });
+            }catch(ex){
+            }
+          },
+              child: Text("OTP"),),
+        ],
+      ),
+    );
+  }
+}
+ /*  onPressed: () {
               SignIn();
-            },
-            /*  onPressed: () async {
+            },*/
+ /*  onPressed: () async {
                 PhoneAuthCredential credential = PhoneAuthProvider.credential(
                     verificationId: widget.verificationid,
                     smsCode: otpController.text.toString());
@@ -159,20 +161,20 @@ class _OTPScreenState extends State<OTPScreen> {
                   Get.snackbar('Error Occured', e.toString());
                 }
               },*/
-              /* onPressed: () async{
-            try{
-              PhoneAuthCredential credential = await PhoneAuthProvider.credential(
-                  verificationId: widget.verificationid,
-                  smsCode: otpController.text.toString());
-              FirebaseAuth.instance.signInWithCredential(credential).then((value) {
-                // Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(),));
-              });
-            }catch(ex){
-            }
-          },*/
-              child: Text("OTP"),),
-        ],
-      ),
-    );
+ /* SignIn()async{
+    PhoneAuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: widget.verificationid,
+        smsCode: otpController.text.toString());
+
+    try{
+      await FirebaseAuth.instance.signInWithCredential(credential).then((value) {
+        Get.offAll(Wrapper());
+      });
+    } on FirebaseAuthException catch(e){
+      Get.snackbar('Error Occured', e.code);
+    }catch (e){
+      Get.snackbar('Error Occured', e.toString());
+    }
+
   }
-}
+*/
